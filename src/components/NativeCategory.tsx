@@ -1,10 +1,10 @@
 import React from 'react';
 import { INativesCategory } from '../constans/interfaces';
 import Native from '../components/Native';
+import { AppContext, IAppContext } from '../context';
 
 interface Prop {
     categoryName: string;
-    filterText: string;
     natives: INativesCategory;
 }
 
@@ -13,6 +13,8 @@ interface State {
 }
 
 export default class NativeCategory extends React.Component<Prop, State> {
+    static contextType = AppContext;
+
     constructor(props: Prop){
         super(props);
 
@@ -23,34 +25,8 @@ export default class NativeCategory extends React.Component<Prop, State> {
         this.toggleCategory = this.toggleCategory.bind(this);
     }
 
-    getNatives(): JSX.Element[] {
-        console.log('a');
-        const natives: JSX.Element[] = [];
-        const filterTextUpperCase = this.props.filterText.toUpperCase();
-        const isTextFiltered = this.props.filterText !== '';
-
-        const start = performance.now();
-        for (const hash in this.props.natives) {
-            if (this.props.natives.hasOwnProperty(hash)) {
-                const native = this.props.natives[hash];
-
-                if(isTextFiltered) {
-                    if(native.name.indexOf(filterTextUpperCase) !== -1){
-                        natives.push(<Native key={hash} native={native} />);
-                    }
-                } else {
-                    natives.push(<Native key={hash} native={native} />)
-                }
-            }
-        }
-
-        console.log(`Time: ${performance.now() - start}`);
-        return natives;
-    }
-
     toggleCategory() {
         this.setExpanded(!this.state.isExpanded);
-        console.log('Eldo');
     }
 
     setExpanded(isExpanded: boolean){
@@ -59,18 +35,17 @@ export default class NativeCategory extends React.Component<Prop, State> {
         });
     }
 
-    render(){
-        const natives: JSX.Element[] = [];
-        const filterTextUpperCase = this.props.filterText.toUpperCase();
-        const isTextFiltered = this.props.filterText !== '';
+    renderNatives(natives: JSX.Element[]) {
+        const filterTextUpperCase = this.context.filterText.toUpperCase();
+        const isTextFiltered = this.context.filterText !== '';
 
         const start = performance.now();
         for (const hash in this.props.natives) {
             if (this.props.natives.hasOwnProperty(hash)) {
                 const native = this.props.natives[hash];
+                if(!this.state.isExpanded && this.context.searchOnlyInOpenedCategories) break;
 
                 if(isTextFiltered) {
-                    console.log('wrong');
                     if(native.name.indexOf(filterTextUpperCase) !== -1){
                         natives.push(<Native key={hash} native={native} />);
                         if(!this.state.isExpanded) this.setExpanded(true);
@@ -81,8 +56,16 @@ export default class NativeCategory extends React.Component<Prop, State> {
                 }
             }
         }
-
         console.log(`Time: ${performance.now() - start}`);
+        return natives;
+    }
+
+    render(){
+        if(this.context == null) return (<p>Error occurred while rendering categories.</p>);
+
+        let natives: JSX.Element[] = [];
+        if(this.state.isExpanded || !this.context.searchOnlyInOpenedCategories) 
+            natives = this.renderNatives(natives);
 
         return(
             <li className="native-category">

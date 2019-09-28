@@ -7,11 +7,11 @@ interface Props {
 }
 
 export default class Native extends React.Component<Props, {}> {
-    getNativeName(): string{
+    getNativeName(): string {
         return camelizeText(this.props.native.name);
     }
 
-    getNativeParams(){
+    getNativeParams() {
         const params: JSX.Element[] = [];
         const paramsLength = this.props.native.params.length;
 

@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.native-name {
+  color: #d7ba7d;
+}
+
+.param-type {
+  color: #569cd6;
+}
+
+.param-name {
+  color: #9cdcfe;
+}
+

@@ -6,23 +6,37 @@ interface Props {
     natives: INatives;
 }
 
-export default class NativeCategories extends React.Component<Props, {}> {
-    render(){
-        const categories = [];
+interface State {
+    categories: JSX.Element[];
+}
 
-        console.log('BBBBBB');
+export default class NativeCategories extends React.Component<Props, State> {
+    constructor(props: Props){
+        super(props);
+
+        this.state = {
+            categories: [],
+        }
+    }
+
+    componentDidMount(){
         for (const category in this.props.natives) {
             if (this.props.natives.hasOwnProperty(category)) {
-                categories.push(<NativeCategory 
-                                    key={category} 
-                                    categoryName={category}
-                                    natives={this.props.natives[category]} />);
+                const newCategory = <NativeCategory 
+                                        key={category} 
+                                        categoryName={category}
+                                        natives={this.props.natives[category]} />
+                this.setState(state => ({
+                    categories: [...state.categories, newCategory]
+                }));
             }
         }
+    }
 
+    render(){
         return(
             <div>
-                <ul>{categories}</ul>
+                <ul>{this.state.categories}</ul>
             </div>
         )
     }

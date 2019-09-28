@@ -1,7 +1,8 @@
 import React from 'react';
 import { INativesCategory } from '../constans/interfaces';
 import Native from '../components/Native';
-import { AppContext, IAppContext } from '../context';
+import { AppContext } from '../context';
+import Collapse from 'react-bootstrap/Collapse';
 
 interface Prop {
     categoryName: string;
@@ -70,9 +71,9 @@ export default class NativeCategory extends React.Component<Prop, State> {
         return(
             <li className="native-category">
                 <p onClick={this.toggleCategory}>{this.props.categoryName} {natives.length > 0 && natives.length}</p>
-                {natives.length > 0 && 
+                <Collapse in={natives.length > 0}>
                     <ul>{natives}</ul>
-                }
+                </Collapse>
             </li>
         )
     }

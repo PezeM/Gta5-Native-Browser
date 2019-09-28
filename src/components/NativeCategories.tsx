@@ -14,10 +14,10 @@ export default class NativeCategories extends React.Component<Props, {}> {
         for (const category in this.props.natives) {
             if (this.props.natives.hasOwnProperty(category)) {
                 categories.push(<NativeCategory 
-                                key={category} 
-                                categoryName={category}
-                                natives={this.props.natives[category]} 
-                                filterText={this.props.filterText}/>);
+                                    key={category} 
+                                    categoryName={category}
+                                    natives={this.props.natives[category]} 
+                                    filterText={this.props.filterText}/>);
             }
         }
 
